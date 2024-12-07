@@ -1,18 +1,4 @@
-import Image from "next/image";
-import localFont from "next/font/local";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 const TASKS = [
   {id: 1, name: "Task 1", isDone: false},
@@ -20,7 +6,7 @@ const TASKS = [
   {id: 3, name: "Task 3", isDone: true},
 ];
 
-function ToDoApp({initList})
+function ToDoApp()
 {
   //load data from localStorage
   const [inputValue, setInputValue] = useState('');
@@ -28,9 +14,13 @@ function ToDoApp({initList})
 
   //load data from localStorage if exists
   useEffect(() => {
-    const storedData = localStorage.getItem("tasks");
-    if(storedData) {
-      setToDoList(JSON.parse(storedData));
+    try {
+      const storedData = localStorage.getItem("tasks");
+      if(storedData) {
+        setToDoList(JSON.parse(storedData));
+      }
+    } catch (error) {
+      console.error("Error loading localStorage ", error);
     }
   }, []);
 
@@ -52,7 +42,7 @@ function ToDoApp({initList})
       return;
     }
     const newTask = {
-      id: toDoList[toDoList.length - 1].id + 1,
+      id: Date.now(),
       name: inputValue,
       isDone: false
   
@@ -76,7 +66,7 @@ function ToDoApp({initList})
   }
 
   return (
-    <>
+    <div className="todo-container">
       <h1>TO DO LIST</h1>
       <AddNewBar
         inputValue = {inputValue}
@@ -88,20 +78,19 @@ function ToDoApp({initList})
         handleToggleItem = {handleToggleItem}
         handleDeleteTask = {handleDeleteTask}
       />
-    </>
+    </div>
   );
 }
 
 function AddNewBar({inputValue, handleInputValue, handleFormSubmit})
 {
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit} className="add-new-bar">
       <input
         type="text"
         onChange={handleInputValue}
         value={inputValue}
         placeholder="Add new task..."
-        id="add-new-bar"
       />
       <button type="submit">Add</button>
     </form>
@@ -111,7 +100,7 @@ function AddNewBar({inputValue, handleInputValue, handleFormSubmit})
 function ToDoRow({toDoList, handleToggleItem, handleDeleteTask})
 {
   return (
-    <table>
+    <table className="todo-table">
       <tbody>
         {toDoList.map(task => 
             <ToDoRowItem
@@ -145,7 +134,7 @@ function ToDoRowItem({task, handleToggleItem, handleDeleteTask})
           {task.name}
         </label>
       </td>
-      <td><button onClick={() => handleDeleteTask(task.id)}>Delete</button></td>
+      <td><button className="delete-button" onClick={() => handleDeleteTask(task.id)}>Delete</button></td>
     </tr>
   );
 }
@@ -153,6 +142,6 @@ function ToDoRowItem({task, handleToggleItem, handleDeleteTask})
 export default function Home()
 {
   return (
-    <ToDoApp initList={TASKS}/>
+    <ToDoApp/>
   );
 }
