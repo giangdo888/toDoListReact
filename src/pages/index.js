@@ -1,7 +1,7 @@
 import Image from "next/image";
 import localFont from "next/font/local";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,8 +22,23 @@ const TASKS = [
 
 function ToDoApp({initList})
 {
+  //load data from localStorage
   const [inputValue, setInputValue] = useState('');
-  const [toDoList, setToDoList] = useState([...initList]);
+  const [toDoList, setToDoList] = useState([...TASKS]);
+
+  //load data from localStorage if exists
+  useEffect(() => {
+    const storedData = localStorage.getItem("tasks");
+    if(storedData) {
+      setToDoList(JSON.parse(storedData));
+    }
+  }, []);
+
+  //store data to localStorage if there's any change
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(toDoList));
+  }, [toDoList]);
+
 
   function handleInputValue(e)
   {
