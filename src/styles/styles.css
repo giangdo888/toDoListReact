@@ -16,6 +16,7 @@ h1 {
     text-align: center;
     font-size: xx-large;
     color: #333;
+    margin-bottom: 2rem;
 }
 
 .add-new-bar {
@@ -72,8 +73,21 @@ h1 {
     border-bottom: none;
 }
 
-.task-check-box {
-    margin-right: 0.5rem;
+ /* Task checkbox styling */
+ .task-check-box {
+    appearance: none; /* Removes default checkbox */
+    width: 1rem; /* Size of the checkbox */
+    height: 1rem; /* Size of the checkbox */
+    border: 1px solid #ccc; /* Blue border */
+    border-radius: 50%; /* Circular checkbox */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.2s, border-color 0.2s; /* Smooth animation */
+    margin-right: 1rem;
+}
+
+.task-check-box:checked {
+background-color: #ccc; /* Blue when checked */
+border-color: #ccc; /* Matches the border */
 }
 
 .task-name {
